@@ -50,13 +50,13 @@ void TriangleManager::initGL(int widgetWidth, int widgetHeight) {
         _colorLoc		    = glGetAttribLocation(_sProgramPlay,    "a_Color");
         _mvpMatrixLoc       = glGetUniformLocation(_sProgramPlay,   "u_MvpMatrix");
         GLfloat vertices[]  = {
-            -0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
-             0.5f, -0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
-            -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+            -0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
 
-            -0.5f,  0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
-             0.5f, -0.5f, 0.0f, 1.0f, 1.0f, 0.0f,
-             0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+            -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, 0.0f,
+             0.5f, -0.5f, 0.0f, 1.0f, 0.0f, 0.0f,
+             0.5f,  0.5f, 0.0f, 0.0f, 0.0f, 1.0f,
         };
         glGenVertexArrays(1, &_vaoId);
         glBindVertexArray(_vaoId);
@@ -83,20 +83,24 @@ void TriangleManager::initGL(int widgetWidth, int widgetHeight) {
         glEnableVertexAttribArray(_colorLoc);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
+        // 学习先写死
+        glm::mat4 viewM			= glm::lookAt(glm::vec3(0, 0, 5), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+        glm::mat4 projectionM   = glm::perspective(glm::radians(45.0f), static_cast<float>(_widgetWidth) / static_cast<float>(_widgetHeight), 0.1f, 100.0f);
+        _mvpMatrix		        = projectionM * viewM;
+
     } else {
         LOGE("CompileShaderProgram===================");
     }
 }
 
 void TriangleManager::drawFrame() {
-    LOGE("======================================");
     glViewport(0, 0, _widgetWidth, _widgetHeight);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glBindVertexArray(_vaoId);
     glUseProgram(_sProgramPlay);
     glUniformMatrix4fv(_mvpMatrixLoc, 1, GL_FALSE, glm::value_ptr(_mvpMatrix));
-    glDrawArrays(GL_TRIANGLES, 0, 6);   // 定点个数为6
+    glDrawArrays(GL_TRIANGLES, 0, 6);   // 顶点个数为6
     glBindVertexArray(0);
     glUseProgram(0);
 }
