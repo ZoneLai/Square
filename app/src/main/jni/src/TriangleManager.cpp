@@ -83,11 +83,6 @@ void TriangleManager::initGL(int widgetWidth, int widgetHeight) {
         glEnableVertexAttribArray(_colorLoc);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         glBindVertexArray(0);
-        // 学习先写死
-        glm::mat4 viewM			= glm::lookAt(glm::vec3(0, 0, 5), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
-        glm::mat4 projectionM   = glm::perspective(glm::radians(45.0f), static_cast<float>(_widgetWidth) / static_cast<float>(_widgetHeight), 0.1f, 100.0f);
-        _mvpMatrix		        = projectionM * viewM;
-
     } else {
         LOGE("CompileShaderProgram===================");
     }
@@ -106,8 +101,13 @@ void TriangleManager::drawFrame() {
 }
 
 void TriangleManager::onChange(int widgetWidth, int widgetHeight) {
-    _widgetWidth    = widgetWidth;
-    _widgetHeight   = widgetHeight;
+    _widgetWidth            = widgetWidth;
+    _widgetHeight           = widgetHeight;
+    // 学习先写死
+    glm::mat4 modelM	    = glm::scale(glm::mat4(1.0f), glm::vec3(2.0f, 2.0f, 2.0f));
+    glm::mat4 viewM			= glm::lookAt(glm::vec3(0, 0, 5), glm::vec3(0, 0, -1), glm::vec3(0, 1, 0));
+    glm::mat4 projectionM   = glm::perspective(glm::radians(45.0f), static_cast<float>(_widgetWidth) / static_cast<float>(_widgetHeight), 0.1f, 100.0f);
+    _mvpMatrix		        = projectionM * viewM * modelM;
 }
 
 GLint TriangleManager::getCameraTextureId() {
